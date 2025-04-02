@@ -1,0 +1,96 @@
+
+html {
+    background-color: #000033;
+    color: #ffffff;
+    --tileSize: 20px;
+    --tileColor: #ffffff;
+    --barPos: 0;
+}
+
+canvas {
+    width: 500px;
+    image-rendering: crisp-edges;
+}
+
+.lambda {
+    display: grid;
+    justify-content: start;
+    align-content: start;
+    /* border: 2px solid #ff0000; */
+}
+/* .lambda:hover {
+    filter: drop-shadow(0 0 8px white);
+}
+.lambda:hover:has(.lambda:hover) {
+    filter: none;
+} */
+
+.variable {
+    width: var(--tileSize);
+    height: calc(100% + var(--barPos) * 2 * var(--tileSize));
+    position: relative;
+    top: calc(var(--barPos) * -2 * var(--tileSize));
+    margin-bottom: var(--tileSize);
+    background-color: var(--tileColor);
+    margin-left: var(--tileSize);
+    margin-right: var(--tileSize);
+    --tileColor: #ff0000;
+}
+.variable.parameter {
+    display: none;
+}
+.expression {
+    grid-template-areas:
+        "l r"
+        "a ."
+        "t .";
+    column-gap: var(--tileSize);
+    height: 100%;
+    grid-template-rows: auto var(--tileSize) 1fr;
+    margin-bottom: var(--tileSize);
+}
+.expression::before {
+    content: "";
+    height: var(--tileSize);
+    width: calc(100% + var(--tileSize) * 2);
+    background-color: var(--tileColor);
+    grid-area: a;
+    margin-left: var(--tileSize);
+    margin-right: var(--tileSize);
+    --tileColor: #00ffff;
+}
+.expression::after {
+    position: relative;
+    content: "";
+    width: var(--tileSize);
+    height: calc(100% + var(--tileSize));
+    background-color: var(--tileColor);
+    grid-area: t;
+    margin-left: var(--tileSize);
+    --tileColor: #00ffff;
+}
+.function {
+    grid-template-rows: auto 1fr;
+    height: 100%;
+}
+.function::before {
+    content: "";
+    height: var(--tileSize);
+    background-color: var(--tileColor);
+    margin-bottom: var(--tileSize);
+    --tileColor: #00ff00;
+}
+
+/* .parameter::before {
+    content: "λ";
+}
+.parameter::after {
+    content: ".";
+}
+
+.expression::before {
+    content: "(";
+}
+.expression::after {
+    content: ")";
+} */
