@@ -18,12 +18,12 @@ canvas {
     align-content: start;
     /* border: 2px solid #ff0000; */
 }
-/* .lambda:hover {
+.lambda:hover {
     filter: drop-shadow(0 0 8px white);
 }
 .lambda:hover:has(.lambda:hover) {
     filter: none;
-} */
+}
 
 .variable {
     width: var(--tileSize);
@@ -34,7 +34,7 @@ canvas {
     background-color: var(--tileColor);
     margin-left: var(--tileSize);
     margin-right: var(--tileSize);
-    --tileColor: #ff0000;
+    /* --tileColor: #ff0000; */
 }
 .variable.parameter {
     display: none;
@@ -57,7 +57,7 @@ canvas {
     grid-area: a;
     margin-left: var(--tileSize);
     margin-right: var(--tileSize);
-    --tileColor: #00ffff;
+    /* --tileColor: #00ffff; */
 }
 .expression::after {
     position: relative;
@@ -67,7 +67,7 @@ canvas {
     background-color: var(--tileColor);
     grid-area: t;
     margin-left: var(--tileSize);
-    --tileColor: #00ffff;
+    /* --tileColor: #00ffff; */
 }
 .function {
     grid-template-rows: auto 1fr;
@@ -78,7 +78,7 @@ canvas {
     height: var(--tileSize);
     background-color: var(--tileColor);
     margin-bottom: var(--tileSize);
-    --tileColor: #00ff00;
+    /* --tileColor: #00ff00; */
 }
 
 /* .parameter::before {

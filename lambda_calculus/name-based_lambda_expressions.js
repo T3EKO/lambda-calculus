@@ -13,6 +13,24 @@ function globalCounterAccess() {
     return GLOBAL_COUNTER++;
 }
 
+function getVariableElementFromHTMLAtRelativeIndex(html, i) {
+	if(i < 0 || i > parseInt(html.style.getPropertyValue("--vwidth"))) return null;
+	if(html.classList.contains("variable")) {
+		return html;
+	}
+	if(html.classList.contains("function")) {
+		return getVariableElementFromHTMLAtRelativeIndex(html.children[1], i);
+	}
+	if(html.classList.contains("expression")) {
+		const lWidth = parseInt(html.children[0].style.getPropertyValue("--vwidth"));
+		if(i < lWidth) {
+			return getVariableElementFromHTMLAtRelativeIndex(html.children[0], i);
+		}
+		return getVariableElementFromHTMLAtRelativeIndex(html.children[1], i - lWidth);
+	}
+	return null;
+}
+
 const LAMBDA_TYPES = {
     VARIABLE: class {
         name;
@@ -74,7 +92,7 @@ const LAMBDA_TYPES = {
             el.classList.add("lambda");
             el.classList.add("variable");
             el.setAttribute("var-name", this.name);
-            // el.innerText = this.name;
+            el.style.setProperty("--vwidth", this.getWidth());
             return el;
         }
 
@@ -156,13 +174,21 @@ const LAMBDA_TYPES = {
             const el = document.createElement("div");
             el.classList.add("lambda");
             el.classList.add("function");
+            el.style.setProperty("--vwidth", this.getWidth());
             const param = this.param.getHTML();
             param.classList.add("parameter");
             el.append(param, this.body.getHTML());
             const variableIndices = this.getInstanceRelativeIndices(this.param);
             const variableHeights = variableIndices.map(i => this.getRelativeHeightAtRelativeIndex(i));
 
-            
+            // traverse the HTML tree and set the barPos variable for all elements representing references to this lambda abstraction bar
+
+            for(let i = 0;i < variableIndices.length;i++) {
+                const vpos = variableIndices[i];
+                const vheight = variableHeights[i];
+                const vel = getVariableElementFromHTMLAtRelativeIndex(el.children[1], vpos);
+                vel.style.setProperty("--barPos", vheight);
+            }
 
             return el;
         }
@@ -271,6 +297,7 @@ const LAMBDA_TYPES = {
             const el = document.createElement("div");
             el.classList.add("lambda");
             el.classList.add("expression");
+            el.style.setProperty("--vwidth", this.getWidth());
             el.append(this.left.getHTML(), this.right.getHTML());
             return el;
         }
