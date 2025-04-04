@@ -8,7 +8,7 @@ html {
 }
 
 canvas {
-    width: 500px;
+    width: 60vw;
     image-rendering: crisp-edges;
 }
 
@@ -27,7 +27,7 @@ canvas {
 
 .variable {
     width: var(--tileSize);
-    height: calc(100% + var(--barPos) * 2 * var(--tileSize));
+    height: calc(100% + (var(--barPos) * 2 - 1) * var(--tileSize));
     position: relative;
     top: calc(var(--barPos) * -2 * var(--tileSize));
     margin-bottom: var(--tileSize);
@@ -57,10 +57,12 @@ canvas {
     grid-area: a;
     margin-left: var(--tileSize);
     margin-right: var(--tileSize);
+    margin-top: calc(-1 * var(--tileSize));
     /* --tileColor: #00ffff; */
 }
 .expression::after {
     position: relative;
+    top: calc(-1 * var(--tileSize));
     content: "";
     width: var(--tileSize);
     height: calc(100% + var(--tileSize));

@@ -40,6 +40,7 @@ const LAMBDA_TYPES = {
         }
 
         matches(variable) {
+            if(!(variable instanceof LAMBDA_TYPES.VARIABLE)) return false;
             return this.name === variable.name;
         }
 
@@ -96,15 +97,15 @@ const LAMBDA_TYPES = {
             return el;
         }
 
-        draw(color) {
+        draw(tileSize, color) {
             const canv = document.createElement("canvas");
             const ctx = canv.getContext("2d");
             ctx.imageSmoothingEnabled = false;
-            canv.width = 3;
-            canv.height = 1;
+            canv.width = 3 * tileSize;
+            canv.height = 1 * tileSize;
             ctx.fillStyle = color;
             // ctx.fillStyle = "#0000ff";
-            ctx.fillRect(1, 0, 1, 1);
+            ctx.fillRect(tileSize, 0, tileSize, tileSize);
             return canv;
         }
 
@@ -123,6 +124,11 @@ const LAMBDA_TYPES = {
         constructor(param, body) {
             this.param = ensureValidLambda(param);
             this.body = ensureValidLambda(body);
+        }
+
+        matches(lfunction) {
+            if(!(lfunction instanceof LAMBDA_TYPES.FUNCTION)) return false;
+            return this.param.matches(lfunction.param) && this.body.matches(lfunction.body);
         }
 
         replaceInstances(toReplace, replacement) {
@@ -193,17 +199,17 @@ const LAMBDA_TYPES = {
             return el;
         }
 
-        draw(color) {
+        draw(tileSize, color) {
             const canv = document.createElement("canvas");
             const ctx = canv.getContext("2d");
             ctx.imageSmoothingEnabled = false;
-            canv.width = this.getWidth() * 4 - 1;
-            canv.height = this.getHeight() * 2;
+            canv.width = (this.getWidth() * 4 - 1) * tileSize;
+            canv.height = this.getHeight() * 2 * tileSize;
             ctx.fillStyle = color;
-            const body = this.body.draw(color);
-            ctx.drawImage(body, 0, 2);
+            const body = this.body.draw(tileSize, color);
+            ctx.drawImage(body, 0, 2 * tileSize);
             // ctx.fillStyle = "#ff00ff";
-            ctx.fillRect(0, 0, canv.width, 1);
+            ctx.fillRect(0, 0, canv.width, tileSize);
 
             // ctx.fillStyle = "#777777";
             const variableIndices = this.getInstanceRelativeIndices(this.param);
@@ -211,7 +217,7 @@ const LAMBDA_TYPES = {
             for(let i = 0;i < variableIndices.length;i++) {
                 const pos = variableIndices[i];
                 const height = variableHeights[i];
-                ctx.fillRect(pos * 4 + 1, 1, 1, height * 2 - 1);
+                ctx.fillRect((pos * 4 + 1) * tileSize, tileSize, tileSize, (height * 2 - 1) * tileSize);
             }
 
             return canv;
@@ -232,6 +238,11 @@ const LAMBDA_TYPES = {
         constructor(left, right) {
             this.left = ensureValidLambda(left);
             this.right = ensureValidLambda(right);
+        }
+
+        matches(expression) {
+            if(!(expression instanceof LAMBDA_TYPES.EXPRESSION)) return false;
+            return this.left.matches(expression.left) && this.right.matches(expression.right);
         }
 
         replaceInstances(toReplace, replacement) {
@@ -302,30 +313,30 @@ const LAMBDA_TYPES = {
             return el;
         }
 
-        draw(color) {
+        draw(tileSize, color) {
             const canv = document.createElement("canvas");
             const ctx = canv.getContext("2d");
             ctx.imageSmoothingEnabled = false;
-            canv.width = this.getWidth() * 4 - 1;
-            canv.height = this.getHeight() * 2;
+            canv.width = (this.getWidth() * 4 - 1) * tileSize;
+            canv.height = this.getHeight() * 2 * tileSize;
             ctx.fillStyle = color;
             const leftWidth = this.left.getWidth();
-            const left = this.left.draw(color);
+            const left = this.left.draw(tileSize, color);
             ctx.drawImage(left, 0, 0);
-            const right = this.right.draw(color);
-            ctx.drawImage(right, leftWidth * 4, 0);
+            const right = this.right.draw(tileSize, color);
+            ctx.drawImage(right, leftWidth * 4 * tileSize, 0);
 
             const dif = left.height - right.height;
             // ctx.fillStyle = "#ff0000";
             if(dif < 0) {
-                ctx.fillRect(1, canv.height - 2, 1, dif);
+                ctx.fillRect(tileSize, canv.height - 2 * tileSize, tileSize, dif);
             } else if(dif > 0) {
-                ctx.fillRect(leftWidth * 4 + 1, canv.height - 2, 1, -dif);
+                ctx.fillRect((leftWidth * 4 + 1) * tileSize, canv.height - 2 * tileSize, tileSize, -dif);
             }
 
             // ctx.fillStyle = "#00ff00";
-            ctx.fillRect(1, canv.height - 2, leftWidth * 4 + 1, 1);
-            ctx.fillRect(1, canv.height - 1, 1, 1);
+            ctx.fillRect(tileSize, canv.height - 2 * tileSize, (leftWidth * 4 + 1) * tileSize, tileSize);
+            ctx.fillRect(tileSize, canv.height - tileSize, tileSize, tileSize);
             return canv;
         }
 
